@@ -2,23 +2,8 @@
 
 open FsxUnit.Syntax
 open Xunit
-open Module1
-
-let should_become expected insert =
-  match insert with
-  | (cell, value) -> put_cell cell value new_sheet |> get_cell cell |> should equal expected
-  | _ -> false |> should be True
-let should_be_empty cell =
-  get_cell cell new_sheet |> should equal ""
-let should_store_in_sequence cell_additions =
-  let rec loop cell_additions sheet =
-    match cell_additions with
-    | (cell, value) :: t ->
-        let current_sheet =  put_cell cell value sheet
-        current_sheet |> get_cell cell |> should equal value
-        loop t current_sheet
-    | [] -> true |> should be True
-  loop cell_additions new_sheet
+open TestHelpers
+open Spreadsheet
 
 [<Fact>]
 let cells_be_empty_on_default() =
@@ -44,7 +29,24 @@ let it_should_format_numbers_like_numbers() =
   ("A1", "7") |> should_become "7"
 
 [<Fact>]
-let is_preserve_whitespace_in_strings() =
+let it_preserves_whitespace_in_strings() =
   ("A1", " X 99 ") |> should_become " X 99 "
 
-  
+[<Fact>]
+let it_trims_numbers() =
+  ("A1", " 1234 ") |>  should_become "1234"
+
+[<Fact>]
+let it_passes_space_through() =
+  ("A1", " ") |> should_become " "
+
+[<Fact>]
+let it_returns_a_literal_string() =
+  ("A1", "Some String") |> should_be_literally "Some String"
+[<Fact>]
+let it_should_return_the_spaced_number() =
+  ("A1", " 1234 ") |> should_be_literally " 1234 "
+
+[<Fact>]
+let it_should_return_literal_formulas() =
+  ("A1", "=7") |> should_be_literally "=7"
