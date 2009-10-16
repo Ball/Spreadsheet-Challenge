@@ -38,3 +38,15 @@ let it_handle_slightly_comples_expressions() =
 [<Fact>]
 let it_handle_complex_expressions() =
   ("A1", "=7*(2+3)*((((2+1))))") |> should_become "105"
+[<Fact>]
+let it_report_multiplication_errors() =
+  ("A1", "=7*") |> should_become "#Error"
+[<Fact>]
+let it_report_parenthetical_errors() =
+  ("A1", "=((((7))") |> should_become "#Error"
+[<Fact>]
+let it_handle_subtraction() =
+  ("A1", "=4-1") |> should_become "3"
+[<Fact>]
+let it_handle_division() =
+  ("A1", "=6/2") |> should_become "3"
