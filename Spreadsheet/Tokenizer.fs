@@ -23,18 +23,23 @@ let classifyToken c =
 let rec merge thing list =
     seq { match list with
           | [] -> yield thing
-          | h :: t -> match classifyToken h with
-                      | WhiteSpace(h) -> yield! merge thing t
-                      | Other(h) -> yield! merge (String.concat "" [thing; h]) t
-                      | Symbol(h) -> if not ("".Equals(thing)) then
-                                       yield thing
-                                     yield h
-                                     yield! merge "" t
+          | h :: t -> 
+              match classifyToken h with
+              | WhiteSpace(h) -> yield! merge thing t
+              | Other(h) -> yield! merge (String.concat "" [thing; h]) t
+              | Symbol(h) ->
+                if not ("".Equals(thing)) then
+                   yield thing
+                yield h
+                if not (List.length t = 0) then
+                    yield! merge "" t
     }
 
-let tokenize (source:string) =
+let seq_tokenize (source:string) =
   source.ToCharArray()
   |> List.of_array
   |> List.map (fun x-> x.ToString())
   |> merge ""
+let tokenize source =
+  seq_tokenize source
   |> List.of_seq

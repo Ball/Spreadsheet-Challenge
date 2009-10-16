@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionTest.fs" />
     <Compile Include="TestHelpers.fs" />
     <Compile Include="TokenizerTest.fs" />
     <Compile Include="Challenge1.fs" />

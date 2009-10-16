@@ -1,6 +1,7 @@
 ﻿#light
 open System.Text.RegularExpressions
 open Tokenizer
+open Expressions
 
 let new_sheet = Map.empty<string,string>
 
@@ -13,21 +14,8 @@ let mult a b =
   (System.Int32.Parse(a) * System.Int32.Parse(b)).ToString()
 let add a b =
   (System.Int32.Parse(a) + System.Int32.Parse(b)).ToString()
-
-let rec valueOf tokens =
-  match tokens with
-  | [] -> ""
-  | "(" :: t -> valueOf t
-  | a :: "*" :: "(" :: t ->
-     valueOf ("(" :: t) |> mult a
-  | a :: "+" :: "(" :: t ->
-     valueOf ("(" :: t) |> add a
-  | a :: "*" :: b :: t -> (mult a b)::t |> valueOf
-  | a :: "+" :: b :: "*" :: t -> valueOf (b :: "*" :: t) |> add a
-  | a :: "+" :: b :: t -> (add a b)::t |> valueOf
-  | h :: t -> h
   
-let evaluate sheet (literal:string) =
+let evaluate sheet (literal:string) :string =
   match literal.StartsWith("=") with
   |true -> Regex.Replace(literal, "^=", "")
            |> tokenize

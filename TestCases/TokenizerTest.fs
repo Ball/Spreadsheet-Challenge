@@ -13,3 +13,9 @@ let it_collect_adjacent_numbers() =
 [<Fact>]
 let it_seperate_unlike_tokens() =
   tokenize "1+2" |> should equal ["1"; "+"; "2"]
+[<Fact>]
+let it_tokenize_closing_parens() =
+  tokenize "+" |> List.length |> should equal 1
+[<Fact>]
+let it_tokenize_parens() =
+  tokenize "(4)" |> should equal ["(" ; "4"; ")"]
