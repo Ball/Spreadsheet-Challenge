@@ -1,45 +1,23 @@
 ﻿#light
 
-type tokenChar =
-  |WhiteSpace of string
-  |Other of string
-  |Symbol of string
-
-let isSymbol (str:string) =
-  ["("; ")"; "+"; "-"; "/"; "*"]
-  |> List.exists (fun x -> x.Equals(str))
-let isWhiteSpace (str:string) =
-  [" "; "\t"; "\n"; "\r"]
-  |> List.exists (fun x -> x.Equals(str))
-  
-let classifyToken c =
-  if isSymbol c then
-    Symbol(c)
-  else if isWhiteSpace c then
-    WhiteSpace(c)
-  else
-    Other(c)
-
-let rec merge thing list =
-    seq { match list with
-          | [] -> yield thing
-          | h :: t -> 
-              match classifyToken h with
-              | WhiteSpace(h) -> yield! merge thing t
-              | Other(h) -> yield! merge (String.concat "" [thing; h]) t
-              | Symbol(h) ->
-                if not ("".Equals(thing)) then
-                   yield thing
-                yield h
-                if not (List.length t = 0) then
-                    yield! merge "" t
-    }
-
-let seq_tokenize (source:string) =
-  source.ToCharArray()
-  |> List.of_array
-  |> List.map (fun x-> x.ToString())
-  |> merge ""
-let tokenize source =
-  seq_tokenize source
-  |> List.of_seq
+let tokenize (source:string) =
+  let symbols = Set.of_list ['('; ')'; '+'; '-'; '/'; '*'] 
+  let whiteSpaces = Set.of_list [' '; '\t'; '\n'; '\r']
+  let isSymbol (chr:char) = Set.mem chr symbols
+  let isWhiteSpace (chr:char) = Set.mem chr whiteSpaces
+  let join digits =
+    let buffer = new System.Text.StringBuilder()
+    List.rev digits |> List.map (fun (x:char) -> buffer.Append(x)) |> ignore
+    buffer.ToString()
+  let rec gather source digits tokens =
+    match source with
+    | h::t when (isSymbol h) or (isWhiteSpace h) -> (join digits)::tokens |> loop source
+    | [] -> (join digits)::tokens |> loop source
+    | h::t -> gather t (h::digits) tokens  
+  and loop source tokens =
+    match source with
+    | [] -> List.rev tokens
+    | h::t when isSymbol h -> loop t (h.ToString()::tokens)
+    | h::t when isWhiteSpace h -> loop t tokens
+    | _ -> gather source [] tokens
+  loop (source.ToCharArray() |> List.of_array) []

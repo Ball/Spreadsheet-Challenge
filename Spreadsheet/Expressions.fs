@@ -35,15 +35,15 @@ and number stream =
   match stream with
   | h :: t -> Number(System.Int32.Parse(h)), t
   | _ -> Error("Not a number"), []
-and addstar strm =
-  match strm with
-  | [] -> Empty, []
-  | h :: t -> add t 
-and substar stream =
-  match stream with
-  | [] -> Empty, []
-  | h :: t -> add t
 and add stream =
+  let addstar strm =
+    match strm with
+    | [] -> Empty, []
+    | h :: t -> add t 
+  let substar stream =
+    match stream with
+    | [] -> Empty, []
+    | h :: t -> add t
   match mult stream with
   | a, "+"::t ->
      match addstar ("+"::t) with
@@ -54,15 +54,15 @@ and add stream =
      | Error(z), rest -> Sub(a,Error(z)), stream
      | y, rest -> Sub(a, y), rest
   | x, rest -> x, rest
-and multstar stream =
-  match stream with
-  | [] -> Empty, []
-  | h :: t -> mult t
-and divstar stream =
-  match stream with
-  | [] -> Empty, []
-  | h :: t -> mult t
 and mult stream =
+  let multstar stream =
+    match stream with
+    | [] -> Empty, []
+    | h :: t -> mult t
+  let divstar stream =
+    match stream with
+    | [] -> Empty, []
+    | h :: t -> mult t
   match atom stream with
   | a, h::t when h = "*" ->
     match multstar ("*"::t) with
