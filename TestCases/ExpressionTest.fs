@@ -14,12 +14,12 @@ let simple_unary_expression_number() =
 let simple_binary_expression() =
   tokenize "4+2"
   |> parse
-  |> should equal (Add(Number(4),Number(2)))
+  |> should equal (Sum(Number(4),Number(2)))
 [<Fact>]
 let simple_multiplication() =
   tokenize "4*2"
   |> parse
-  |> should equal (Mult(Number(4),Number(2)))
+  |> should equal (Product(Number(4),Number(2)))
 [<Fact>]
 let simple_parenthetical() =
   tokenize "(4)"
