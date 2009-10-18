@@ -3,7 +3,7 @@
 open Xunit
 open FsxUnit.Syntax
 open Tokenizer
-open Expressions
+open Spreadsheet
 
 [<Fact>]
 let simple_unary_expression_number() =

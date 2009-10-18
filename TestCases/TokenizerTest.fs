@@ -2,7 +2,7 @@
 
 open Xunit
 open FsxUnit.Syntax
-open Tokenizer
+open Spreadsheet
 
 [<Fact>]
 let it_returns_a_list_of_one_number_from_4() =
