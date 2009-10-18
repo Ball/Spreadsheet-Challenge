@@ -1,6 +1,5 @@
 ﻿#light
 open System.Text.RegularExpressions
-open Tokenizer
 open System
          
 let new_sheet = Map.empty<string,string>
@@ -14,8 +13,6 @@ type expression =
   | Product of expression * expression
   | Error of string
   | Empty
-
-let (|Formula|_|) (value:string) = if value.StartsWith("=") then Some(Regex.Replace(value, "^=", "")) else None
 
 let rec expression stream =
   let rec atom stream =
@@ -83,6 +80,7 @@ and internal get_tracked_cell seen address sheet =
   |> evaluateLiteral seen sheet
 
 and internal evaluateLiteral seen sheet (literal:string) =
+  let (|Formula|_|) (value:string) = if value.StartsWith("=") then Some(Regex.Replace(value, "^=", "")) else None
   match literal with
   |Formula(formula) -> tokenize formula |> valueOf seen sheet
   | _ -> convert literal

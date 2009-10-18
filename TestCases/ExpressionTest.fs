@@ -2,7 +2,6 @@
 
 open Xunit
 open FsxUnit.Syntax
-open Tokenizer
 open Spreadsheet
 
 [<Fact>]
