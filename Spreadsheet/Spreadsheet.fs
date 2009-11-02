@@ -86,19 +86,33 @@ and internal evaluateLiteral seen sheet (literal:string) =
   | _ -> convert literal
 
 and internal evaluate seen sheet node =
+ let rec evaluate_cps seen sheet node cont =
   match node with
-  | Number(x) -> x
-  | Difference(a,b) -> evaluate seen sheet a - evaluate seen sheet b
-  | Sum(a,b) -> evaluate seen sheet a + evaluate seen sheet b
-  | Product(a,b) -> evaluate seen sheet a * evaluate seen sheet b
-  | Quotient(a,b) -> evaluate seen sheet a / evaluate seen sheet b
+  | Number(x) -> cont x
+  | Difference(a,b) ->
+    evaluate_cps seen sheet a (fun x ->
+        evaluate_cps seen sheet b (fun y ->
+            cont (x - y)))
+  | Sum(a,b) ->
+    evaluate_cps seen sheet a (fun x ->
+        evaluate_cps seen sheet b (fun y ->
+            cont(x + y)))
+  | Product(a,b) ->
+    evaluate_cps seen sheet a (fun x ->
+        evaluate_cps seen sheet b (fun y ->
+            cont(x * y)))
+  | Quotient(a,b) ->
+    evaluate_cps seen sheet a (fun x ->
+        evaluate_cps seen sheet b (fun y ->
+            cont(x / y)))
   | Address(a) ->
      if Set.mem a seen then
         failwith "Circular"
      else
-        Int32.Parse(get_tracked_cell (Set.add a seen) a sheet)
+        cont (Int32.Parse(get_tracked_cell (Set.add a seen) a sheet))
   | Error(x) -> failwith x
   | Empty -> failwith "Empty"
+ evaluate_cps seen sheet node (fun x -> x)
 
 and internal valueOf seen sheet stream =
   try
