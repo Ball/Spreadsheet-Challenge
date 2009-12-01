@@ -2,22 +2,21 @@
 
 open Spreadsheet
 
-type CellViewModel(model:Map<string,string>, row:int) =
-  class
-    member x.InstanceIndexer
-      with get(column) = Spreadsheet.get_cell (column+row.ToString()) model
-  end
-type RawCellViewModel(model:Map<string,string>, row:int) =
-  class
-    member x.InstanceIndexer
-      with get(column) = Spreadsheet.get_literal (column+row.ToString()) model
-  end
-type RowViewModel(model:Map<string,string>, row:int) =
-  class
-    member x.Raw = new RawCellViewModel(model, row)
-    member x.Evaluated = new CellViewModel(model, row)
-  end
+let public the_sheet = ref new_sheet
 
-let row_models row_count sheet =
+type CellViewModel(model:Map<string,string>, row:int) =
+  member x.Item
+    with get(column) = Spreadsheet.get_cell (column+row.ToString()) model
+
+type RawCellViewModel(model:Map<string,string>, row:int) =
+  member x.Item
+    with get(column) = Spreadsheet.get_literal (column+row.ToString()) model
+    and set(column) (value:string) = the_sheet := Spreadsheet.put_literal (column+row.ToString()) value model
+                              
+type RowViewModel(model:Map<string,string>, row:int) =
+  member x.Raw = new RawCellViewModel(model, row)
+  member x.Evaluated = new CellViewModel(model, row)
+
+let row_models row_count =
   [1 .. row_count]
-  |> List.map (fun x -> new RowViewModel(sheet, x))
+  |> List.map (fun x -> new RowViewModel(!the_sheet, x))
