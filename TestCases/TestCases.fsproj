@@ -37,6 +37,14 @@
       <HintPath>..\..\SudukoMusings\FsTest\bin\Debug\FsTest.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Name>PresentationCore</Name>
+      <AssemblyName>PresentationCore.dll</AssemblyName>
+    </Reference>
+    <Reference Include="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Name>PresentationFramework</Name>
+      <AssemblyName>PresentationFramework.dll</AssemblyName>
+    </Reference>
     <Reference Include="Spreadsheet, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>Spreadsheet</Name>
       <AssemblyName>Spreadsheet.dll</AssemblyName>
@@ -46,6 +54,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Name>WindowsBase</Name>
+      <AssemblyName>WindowsBase.dll</AssemblyName>
     </Reference>
     <Reference Include="xunit, Version=1.5.0.1479, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
       <Name>xunit</Name>
@@ -62,6 +74,14 @@
     <Compile Include="Challenge2.fs" />
     <Compile Include="Challenge3.fs" />
     <Compile Include="Challenge4.fs" />
+    <Compile Include="Challenge5.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SheetApplication\SheetApplication.csproj">
+      <Name>SheetApplication</Name>
+      <Project>{22af61a8-0e86-496b-a381-6b2697111a74}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\FSharp\1.0\Microsoft.FSharp.Targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

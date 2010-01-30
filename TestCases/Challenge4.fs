@@ -2,8 +2,9 @@
 
 open Xunit
 open TestHelpers
-open Spreadsheet
 open FsxUnit.Syntax
+
+open Spreadsheet
 open ViewModel
 
 [<Fact>]
